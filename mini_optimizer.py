@@ -45,14 +45,14 @@ def clear_selected(paths):
                     shutil.rmtree(dpath, ignore_errors=True)
                 except:
                     continue
-    messagebox.showinfo("Очистка", f"Удалено ~{deleted} файлов. Информация в {LOG_FILE}")
+    messagebox.showinfo("Cleaning", f"Deleted ~{deleted} files. Information in {LOG_FILE}")
 
 def clear_recycle_bin():
     try:
         ctypes.windll.shell32.SHEmptyRecycleBinW(None, None, 0x00000001)
-        messagebox.showinfo("Корзина", "Корзина очищена.")
+        messagebox.showinfo("Resycle", "Resycle cleaned.")
     except Exception as e:
-        messagebox.showerror("Ошибка", f"Не удалось очистить корзину: {e}")
+        messagebox.showerror("Error", f"Failed to empty resycle: {e}")
 
 def show_stats():
     cpu = psutil.cpu_percent()
@@ -60,12 +60,12 @@ def show_stats():
     disk = psutil.disk_usage("C:\\")
     win_ver = platform.version()
     info = (
-        f"Система: Windows {win_ver}\n"
+        f"System: Windows {win_ver}\n"
         f"CPU: {cpu}%\n"
         f"RAM: {ram.used // (1024**2)} / {ram.total // (1024**2)} MB\n"
-        f"Диск: {disk.free // (1024**3)} GB свободно"
+        f"Disk: {disk.free // (1024**3)} GB free"
     )
-    messagebox.showinfo("Состояние системы", info)
+    messagebox.showinfo("System Status", info)
 
 # GUI
 root = Tk()
@@ -79,9 +79,9 @@ style.theme_use("clam")
 frame = ttk.Frame(root, padding=15)
 frame.pack(fill="both", expand=True)
 
-ttk.Label(frame, text="Оптимизация системы", font=("Segoe UI", 13, "bold")).pack(pady=10)
+ttk.Label(frame, text="System optimization", font=("Segoe UI", 13, "bold")).pack(pady=10)
 
-# Чекбоксы
+# Checkboxes
 check_vars = {}
 for name in CLEAN_PATHS:
     var = BooleanVar(value=True)
@@ -93,9 +93,9 @@ def run_cleanup():
     selected = {name: CLEAN_PATHS[name] for name in check_vars if check_vars[name].get()}
     clear_selected(selected)
 
-ttk.Button(frame, text="Очистить выбранное", command=run_cleanup).pack(pady=10, fill="x")
-ttk.Button(frame, text="Очистить корзину", command=clear_recycle_bin).pack(pady=5, fill="x")
-ttk.Button(frame, text="Показать статистику", command=show_stats).pack(pady=5, fill="x")
+ttk.Button(frame, text="Clear selected", command=run_cleanup).pack(pady=10, fill="x")
+ttk.Button(frame, text="Clear resycle", command=clear_recycle_bin).pack(pady=5, fill="x")
+ttk.Button(frame, text="Show statistics", command=show_stats).pack(pady=5, fill="x")
 
 ttk.Label(frame, text="by Yaroslav | Python", font=("Segoe UI", 8)).pack(side="bottom", pady=10)
 

@@ -1,26 +1,26 @@
 # Mini Optimizer
 
-**Mini Optimizer** — это простое GUI-приложение для Windows, написанное на Python, которое позволяет:
+**Mini Optimizer** — This is a simple GUI application for Windows written in Python that allows you to:
 
-- Очистить временные файлы и кэш
-- Очистить корзину
-- Показать статистику системы (CPU, RAM, Disk)
-- Выбрать, какие директории очищать
-- Сохранять лог удалённых файлов
+- Clear temporary files and cache
+- Clear resycle bin
+- Show system statistics (CPU, RAM, Disk)
+- Select which directories to clean
+- Keep log of deleted files
 
-## Скачать
+## Download
 
-[Скачать последнюю версию (.zip)](https://github.com/Bayan-225/mini-optimizer/releases/latest)
+[Download latest version (.zip)](https://github.com/Bayan-225/mini-optimizer/releases/latest)
 
-## Требования
+## Requirements
 
 - Windows 10/11
-- Python 3.10+ (если не используешь `.exe`)
-- Не требует установки, просто запускай `mini_optimizer.exe`
+- Python 3.10+ (if you don't use `.exe`)
+- No installation required, just run `mini_optimizer.exe`
 
-## Сборка самостоятельно
+## Build by yourself
 
-Если хочешь собрать самостоятельно:
+If you want to build it yourself:
 
 ```bash
 pip install pyinstaller
