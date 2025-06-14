@@ -3,7 +3,7 @@
 **Mini Optimizer** — This is a simple GUI application for Windows written in Python that allows you to:
 
 - Clear temporary files and cache
-- Clear resycle bin
+- Clear recycle bin
 - Show system statistics (CPU, RAM, Disk)
 - Select which directories to clean
 - Keep log of deleted files
