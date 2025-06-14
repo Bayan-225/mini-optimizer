@@ -50,9 +50,9 @@ def clear_selected(paths):
 def clear_recycle_bin():
     try:
         ctypes.windll.shell32.SHEmptyRecycleBinW(None, None, 0x00000001)
-        messagebox.showinfo("Resycle", "Resycle cleaned.")
+        messagebox.showinfo("Recycle", "Recycle cleaned.")
     except Exception as e:
-        messagebox.showerror("Error", f"Failed to empty resycle: {e}")
+        messagebox.showerror("Error", f"Failed to empty recycle: {e}")
 
 def show_stats():
     cpu = psutil.cpu_percent()
@@ -94,7 +94,7 @@ def run_cleanup():
     clear_selected(selected)
 
 ttk.Button(frame, text="Clear selected", command=run_cleanup).pack(pady=10, fill="x")
-ttk.Button(frame, text="Clear resycle", command=clear_recycle_bin).pack(pady=5, fill="x")
+ttk.Button(frame, text="Clear recycle", command=clear_recycle_bin).pack(pady=5, fill="x")
 ttk.Button(frame, text="Show statistics", command=show_stats).pack(pady=5, fill="x")
 
 ttk.Label(frame, text="by Yaroslav | Python", font=("Segoe UI", 8)).pack(side="bottom", pady=10)
