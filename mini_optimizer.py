@@ -5,28 +5,47 @@ import platform
 import ctypes
 from tkinter import *
 from tkinter import messagebox, ttk
+from datetime import datetime
 
-def clear_temp():
-    temp_paths = [
-        os.getenv("TEMP"),
-        r"C:\Windows\Temp",
-        r"C:\Windows\Prefetch",
-    ]
+LOG_FILE = "cleanup_log.txt"
+
+CLEAN_PATHS = {
+    "TEMP": os.getenv("TEMP"),
+    "System Temp": os.path.join(os.getenv("SystemRoot"), "Temp"),
+    "User Temp": os.path.join(os.getenv("USERPROFILE"), "AppData", "Local", "Temp"),
+    "Browser Cache": os.path.join(os.getenv("USERPROFILE"), "AppData", "Local", "Microsoft", "Windows", "INetCache"),
+    "Crash Dumps": os.path.join(os.getenv("USERPROFILE"), "AppData", "Local", "CrashDumps"),
+    "Recycle Bin": os.path.join(os.getenv("SystemDrive") + "\\", "$Recycle.Bin"),
+    "Prefetch": os.path.join(os.getenv("SystemRoot"), "Prefetch"),
+    "WER": os.path.join(os.getenv("USERPROFILE"), "AppData", "Local", "Microsoft", "Windows", "WER"),
+    "Packages": os.path.join(os.getenv("USERPROFILE"), "AppData", "Local", "Packages")
+}
+
+def log_deletion(filepath):
+    with open(LOG_FILE, "a", encoding="utf-8") as log:
+        log.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} — {filepath}\n")
+
+def clear_selected(paths):
     deleted = 0
-    for path in temp_paths:
-        if not os.path.exists(path):
+    for name, path in paths.items():
+        if not path or not os.path.exists(path):
             continue
-        for root, dirs, files in os.walk(path):
-            for name in files:
+        for root, dirs, files in os.walk(path, topdown=False):
+            for fname in files:
                 try:
-                    os.remove(os.path.join(root, name))
+                    fpath = os.path.join(root, fname)
+                    os.remove(fpath)
                     deleted += 1
-                except: continue
-            for name in dirs:
+                    log_deletion(fpath)
+                except:
+                    continue
+            for dname in dirs:
                 try:
-                    shutil.rmtree(os.path.join(root, name), ignore_errors=True)
-                except: continue
-    messagebox.showinfo("Очистка", f"Удалено ~{deleted} файлов.")
+                    dpath = os.path.join(root, dname)
+                    shutil.rmtree(dpath, ignore_errors=True)
+                except:
+                    continue
+    messagebox.showinfo("Очистка", f"Удалено ~{deleted} файлов. Информация в {LOG_FILE}")
 
 def clear_recycle_bin():
     try:
@@ -48,11 +67,10 @@ def show_stats():
     )
     messagebox.showinfo("Состояние системы", info)
 
-
-
+# GUI
 root = Tk()
 root.title("Windows Optimizer")
-root.geometry("310x240")
+root.geometry("340x400")
 root.resizable(False, False)
 
 style = ttk.Style(root)
@@ -63,7 +81,19 @@ frame.pack(fill="both", expand=True)
 
 ttk.Label(frame, text="Оптимизация системы", font=("Segoe UI", 13, "bold")).pack(pady=10)
 
-ttk.Button(frame, text="Очистить временные файлы", command=clear_temp).pack(pady=5, fill="x")
+# Чекбоксы
+check_vars = {}
+for name in CLEAN_PATHS:
+    var = BooleanVar(value=True)
+    chk = ttk.Checkbutton(frame, text=name, variable=var)
+    chk.pack(anchor="w")
+    check_vars[name] = var
+
+def run_cleanup():
+    selected = {name: CLEAN_PATHS[name] for name in check_vars if check_vars[name].get()}
+    clear_selected(selected)
+
+ttk.Button(frame, text="Очистить выбранное", command=run_cleanup).pack(pady=10, fill="x")
 ttk.Button(frame, text="Очистить корзину", command=clear_recycle_bin).pack(pady=5, fill="x")
 ttk.Button(frame, text="Показать статистику", command=show_stats).pack(pady=5, fill="x")
 
